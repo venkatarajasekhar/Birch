@@ -1,0 +1,18 @@
+<Configuration>
+  <Database>
+    <Name></Name>
+    <Username></Username>
+    <Password></Password>
+    <Host>localhost</Host>
+    <Port>3306</Port>
+  </Database>
+  <Opal>
+    <Username></Username>
+    <Password></Password>
+    <Host>localhost</Host>
+    <Port>8843</Port>
+  </Opal>
+  <Path>
+    <ImageData></ImageData>
+  </Path>
+</Configuration>

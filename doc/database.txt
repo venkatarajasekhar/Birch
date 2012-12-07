@@ -1,0 +1,8 @@
+study
+  uid
+
+static_image
+  dcs_defined boolean
+
+user
+

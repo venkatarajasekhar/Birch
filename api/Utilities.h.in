@@ -1,0 +1,121 @@
+/*=========================================================================
+
+  Program:  Birch (CLSA Ultrasound Image Viewer)
+  Module:   Utilities.h
+  Language: C++
+
+  Author: Patrick Emond <emondpd@mcmaster.ca>
+  Author: Dean Inglis <inglisd@mcmaster.ca>
+
+=========================================================================*/
+//
+// .SECTION Description
+// A utilities header to include typedefs, macros, global functions, etc.
+//
+
+#ifndef __Utilities_h
+#define __Utilities_h
+
+#define BIRCH_VERSION_MAJOR @BIRCH_VERSION_MAJOR@
+#define BIRCH_VERSION_MINOR @BIRCH_VERSION_MINOR@
+#define BIRCH_VERSION_PATCH @BIRCH_VERSION_PATCH@
+
+#define BIRCH_ROOT_DIR "@BIRCH_ROOT_DIR@"
+#define BIRCH_AUX_DIR "@BIRCH_AUX_DIR@"
+#define BIRCH_API_DIR "@BIRCH_API_DIR@"
+#define BIRCH_APP_DIR "@BIRCH_APP_DIR@"
+#define BIRCH_QT_DIR "@BIRCH_QT_DIR@"
+#define BIRCH_VTK_DIR "@BIRCH_VTK_DIR@"
+#define BIRCH_CONFIG_FILE "@BIRCH_CONFIG_FILE@"
+#define BIRCH_OPAL_SCRIPT "@BIRCH_OPAL_SCRIPT@"
+
+#define BIRCH_SALT_STRING "@BIRCH_SALT_STRING@"
+#define BIRCH_MASTER_PASSWORD ""
+
+//
+// This macro is used for sql debug statements in instance methods
+// vtkDebugSQLMacro(<< "SQL statement");
+//
+#define vtkDebugSQLMacro(x) \
+   vtkDebugSQLWithObjectMacro(this,x)
+
+#ifdef NDEBUG
+# define vtkDebugSQLWithObjectMacro(self, x)
+#else
+# define vtkDebugSQLWithObjectMacro(self, x)                                  \
+  {                                                                           \
+  if (self->GetDebugSQL() && vtkObject::GetGlobalWarningDisplay())            \
+    {                                                                         \
+    vtkOStreamWrapper::EndlType endl;                                         \
+    vtkOStreamWrapper::UseEndl(endl);                                         \
+    vtkOStrStreamWrapper vtkmsg;                                              \
+    vtkmsg << "SQL: In " __FILE__ ", line " << __LINE__ << "\n"               \
+           << self->GetClassName() << " (" << self << "): " x  << "\n\n";     \
+    vtkOutputWindowDisplayDebugText(vtkmsg.str());                            \
+    vtkmsg.rdbuf()->freeze(0);                                                \
+    }                                                                         \
+  }
+#endif
+
+#include <algorithm>
+#include <base64.h>
+#include <cctype>
+#include <json/reader.h>
+#include <sha.h>
+#include <sstream>
+#include <stdio.h>
+#include <time.h>
+
+// main function
+namespace Birch
+{
+  inline void hashString( std::string input, std::string &output )
+  {
+    input += BIRCH_SALT_STRING;
+    output = "";
+
+    CryptoPP::SHA256 hash;
+    CryptoPP::StringSource foo(
+      input.c_str(),
+      true,
+      new CryptoPP::HashFilter( hash,
+        new CryptoPP::Base64Encoder(
+          new CryptoPP::StringSink( output ) ) ) );
+  }
+
+  inline std::string exec( const char* command )
+  {
+    FILE* pipe = popen( command, "r" );
+    if( !pipe ) return "ERROR";
+    char buffer[128];
+    std::string result = "";
+    while( !feof( pipe ) ) if( fgets( buffer, 128, pipe ) != NULL ) result += buffer;
+    pclose( pipe );
+    return result;
+  } 
+
+  inline std::string getTime( std::string format )
+  {
+    char buffer[256];
+    time_t rawtime;
+    time( &rawtime );
+    strftime( buffer, 256, format.c_str(), localtime( &rawtime ) );
+    return std::string( buffer );
+  }
+
+  inline std::string toLower( std::string str )
+  {
+    std::string returnString = str;
+    std::transform( str.begin(), str.end(), returnString.begin(), tolower );
+    return returnString;
+  }
+
+  inline std::string toUpper( std::string str )
+  {
+    std::string returnString = str;
+    std::transform( str.begin(), str.end(), returnString.begin(), toupper );
+    return returnString;
+  }
+}
+
+#endif // __Utilities_h
