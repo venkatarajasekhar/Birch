@@ -1,7 +1,7 @@
 /*=======================================================================
 
   Module:    vtkMedicalImageViewer.h
-  Program:   Birch (CLSA Ultrasound Image Viewer)
+  Program:   Birch (CLSA Retinal Image Viewer)
   Language:  C++
   Author:    Patrick Emond <emondpd@mcmaster.ca>
   Author:    Dean Inglis <inglisd@mcmaster.ca>

@@ -1,6 +1,6 @@
 /*=========================================================================
 
-  Program:  CLSAVis (CLSA Ultrasound Image Viewer)
+  Program:  CLSAVis (CLSA Retinal Image Viewer)
   Module:   vtkCVView.h
   Language: C++
 

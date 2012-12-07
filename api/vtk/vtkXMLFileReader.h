@@ -1,6 +1,6 @@
 /*=========================================================================
 
-  Program:  Birch (CLSA Ultrasound Image Viewer)
+  Program:  Birch (CLSA Retinal Image Viewer)
   Module:   vtkXMLFileReader.h
   Language: C++
 
