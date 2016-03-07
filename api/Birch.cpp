@@ -32,7 +32,7 @@ using namespace Birch;
 // main function
 int main( int argc, char** argv )
 {
-  int status = EXIT_FAILURE;
+  bool status = EXIT_FAILURE;
 
   try
   {
@@ -85,7 +85,11 @@ int main( int argc, char** argv )
     cerr << "Uncaught exception: " << e.what() << endl;
     return EXIT_FAILURE;
   }
-
+ catch(...)
+  {
+    cerr << "exception: " << e.what() << endl;
+    return EXIT_FAILURE;
+  }
   // return the result of the executed application
   return status;
 }
