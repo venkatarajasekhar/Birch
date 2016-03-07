@@ -8,7 +8,7 @@
   Author: Dean Inglis <inglisd@mcmaster.ca>
 
 =========================================================================*/
-#include "User.h"
+#include "AdminUser.h"
 
 #include "Utilities.h"
 
@@ -16,12 +16,12 @@
 
 namespace Birch
 {
-  vtkStandardNewMacro( User );
+  vtkStandardNewMacro( AdminUser );
 
   //-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-
   void User::SetVariant( std::string column, vtkVariant value )
   {
-    if( 0 == column.compare( "password" ) && value.IsValid() )
+    if((column.compare( "password" ) && value.IsValid()) == 0)
     { // if we are setting the password override the parent so that we can hash
       std::string hashedPassword;
       hashString( value.ToString(), hashedPassword );
@@ -32,17 +32,19 @@ namespace Birch
   }
 
   //-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-
-  void User::ResetPassword()
+  void AdminUser::ResetPassword()
   {
-    this->Set( "password", User::GetDefaultPassword() );
+    this->Set( "password", AdminUser::GetDefaultPassword() );
   }
 
   //-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-
-  bool User::IsPassword( std::string password )
+  bool AdminUser::IsPassword( std::string password )
   {
     // first hash the password argument
+    bool ValidPassword = TRUE;
     std::string hashedPassword;
     hashString( password, hashedPassword );
-    return 0 == hashedPassword.compare( this->Get( "password" ).ToString() );
+    if(hashedPassword.compare(this->Get( "password" ).ToString() == 0) );
+    return ValidPassword;
   }
 }
