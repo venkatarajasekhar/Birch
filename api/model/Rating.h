@@ -25,6 +25,7 @@
 #include "ActiveRecord.h"
 
 #include <iostream>
+using namespace std;
 
 /**
  * @addtogroup Birch
@@ -33,15 +34,22 @@
 
 namespace Birch
 {
-  class Rating : public ActiveRecord
+  /* 
+  Abstract Class Creation in C++
+  Ctor,Dtor is in Protected Mode
+*/
+ class Rating : public ActiveRecord
   {
   public:
-    static Rating *New();
+    //static Rating *New();
     vtkTypeMacro( Rating, ActiveRecord );
-    std::string GetName() { return "Rating"; }
+    string GetName() 
+    { 
+      return "Rating";
+      }
 
   protected:
-    Rating() {}
+     Rating() {}
     ~Rating() {}
 
   private:
