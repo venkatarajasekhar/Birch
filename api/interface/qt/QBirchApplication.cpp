@@ -18,9 +18,11 @@
 //-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-
 bool QBirchApplication::notify( QObject *pObject, QEvent *pEvent )
 {
+ bool NotificationEvent = FALSE;
   try
   {
-    return QApplication::notify( pObject,pEvent );
+    NotificationEvent = QApplication::notify( pObject,pEvent );
+    return NotificationEvent;
   }
   catch( std::exception &e )
   {
@@ -29,6 +31,11 @@ bool QBirchApplication::notify( QObject *pObject, QEvent *pEvent )
     dialog->setModal( true );
     dialog->showMessage( tr( e.what() ) );
   }
-
-  return false;
+  catch(...)
+  {
+  QErrorMessage *dialog = new QErrorMessage( this->activeWindow() );
+  dialog->setModal( true );  
+  dialog->showMessage( tr( e.what() ) );
+  }
+  return NotificationEvent;
 }
