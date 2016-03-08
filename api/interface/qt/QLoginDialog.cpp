@@ -12,7 +12,7 @@
 #include "ui_QLoginDialog.h"
 
 #include "Application.h"
-#include "User.h"
+#include "AdminUser.h"
 
 #include "vtkSmartPointer.h"
 
@@ -20,6 +20,8 @@
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QTextStream>
+
+using namespace std;
 
 //-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-
 QLoginDialog::QLoginDialog( QWidget* parent )
@@ -44,13 +46,13 @@ QLoginDialog::~QLoginDialog()
 //-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-+#+-
 void QLoginDialog::slotAccepted()
 {
-  std::string password = this->ui->passwordLineEdit->text().toStdString();
+  QString password = this->ui->passwordLineEdit->text().toStdString();
 
-  vtkSmartPointer< Birch::User > user = vtkSmartPointer< Birch::User >::New();
+  //vtkSmartPointer< Birch::User > user = vtkSmartPointer< Birch::User >::New();
   if( user->Load( "name", this->ui->usernameLineEdit->text().toStdString() ) && user->IsPassword( password ) )
   { // login successful
     // if the password matches the default password, force the user to change it
-    while( 0 == password.compare( Birch::User::GetDefaultPassword() ) )
+    while(password.compare( Birch::User::GetDefaultPassword() ) == 0)
     {
       // prompt for new password
       QString password1 = QInputDialog::getText(
@@ -58,9 +60,15 @@ void QLoginDialog::slotAccepted()
         QObject::tr( "Change Password" ),
         QObject::tr( "Please provide a new password (cannot be \"password\") for your account:" ),
         QLineEdit::Password );
-
-      if( !password1.isEmpty() && password1 != "password" )
+      /*
+      Password Validation,Checking for the password,is that password is either empty 
+      or "password",if it is.reset the new password,validate with old password
+      if not
+      */
+      
+      if( !(password1.isEmpty() && password1 != "password"))
       {
+        errorMessage.setText( tr( "Invalid password, please try again." ) );
         // re-prompt to repeat password
         QString password2 = QInputDialog::getText(
           this,
@@ -76,7 +84,9 @@ void QLoginDialog::slotAccepted()
           user->Save();
         }
       }
-    }
+     errorMessage.setText( tr( "Invalid password, please try again." ) );
+     errorMessage.setText( tr( "Need to Modify the Password" ) );
+    }   //While Closed
 
     // log in the user and mark login time
     Birch::Application::GetInstance()->SetActiveUser( user );
