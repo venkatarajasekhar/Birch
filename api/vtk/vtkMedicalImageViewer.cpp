@@ -30,12 +30,13 @@ vtkStandardNewMacro( vtkMedicalImageViewer );
 class vtkWindowLevelCallback : public vtkCommand
 {
 public:
-  static vtkWindowLevelCallback *New() { return new vtkWindowLevelCallback; }
 
+ static vtkWindowLevelCallback* GetInstance();
   void Execute( vtkObject *vtkNotUsed( caller ), unsigned long event,
                 void *vtkNotUsed( callData ) )
   {
-    if( !this->Viewer ) return;
+    if( !this->Viewer ) 
+    return;
     switch( event )
     {
       case vtkCommand::ResetWindowLevelEvent:
@@ -47,7 +48,8 @@ public:
       case vtkCommand::WindowLevelEvent:
         this->Viewer->DoWindowLevel();
         break;
-      case vtkCommand::EndWindowLevelEvent: break; 
+      case vtkCommand::EndWindowLevelEvent: 
+      break; 
     }
   }
 
